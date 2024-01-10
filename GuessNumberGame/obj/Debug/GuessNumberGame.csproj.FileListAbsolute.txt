@@ -1,0 +1,12 @@
+F:\Mentorship\GuessNumberName\GuessNumberGame\bin\Debug\GuessNumberGame.exe
+F:\Mentorship\GuessNumberName\GuessNumberGame\bin\Debug\GuessNumberGame.pdb
+F:\Mentorship\GuessNumberName\GuessNumberGame\obj\Debug\GuessNumberGame.csproj.AssemblyReference.cache
+F:\Mentorship\GuessNumberName\GuessNumberGame\obj\Debug\GuessNumberGame.csproj.CoreCompileInputs.cache
+F:\Mentorship\GuessNumberName\GuessNumberGame\obj\Debug\GuessNumberGame.exe
+F:\Mentorship\GuessNumberName\GuessNumberGame\obj\Debug\GuessNumberGame.pdb
+F:\Mentorship\GuessNumberGame\GuessNumberGame\bin\Debug\GuessNumberGame.exe
+F:\Mentorship\GuessNumberGame\GuessNumberGame\bin\Debug\GuessNumberGame.pdb
+F:\Mentorship\GuessNumberGame\GuessNumberGame\obj\Debug\GuessNumberGame.csproj.AssemblyReference.cache
+F:\Mentorship\GuessNumberGame\GuessNumberGame\obj\Debug\GuessNumberGame.csproj.CoreCompileInputs.cache
+F:\Mentorship\GuessNumberGame\GuessNumberGame\obj\Debug\GuessNumberGame.exe
+F:\Mentorship\GuessNumberGame\GuessNumberGame\obj\Debug\GuessNumberGame.pdb
