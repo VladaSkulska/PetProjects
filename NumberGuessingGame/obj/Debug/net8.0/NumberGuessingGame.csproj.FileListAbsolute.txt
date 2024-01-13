@@ -1,0 +1,14 @@
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\NumberGuessingGame.GeneratedMSBuildEditorConfig.editorconfig
+F:\Mentorship\NumberGuessingGame\bin\Debug\net8.0\NumberGuessingGame.exe
+F:\Mentorship\NumberGuessingGame\bin\Debug\net8.0\NumberGuessingGame.deps.json
+F:\Mentorship\NumberGuessingGame\bin\Debug\net8.0\NumberGuessingGame.runtimeconfig.json
+F:\Mentorship\NumberGuessingGame\bin\Debug\net8.0\NumberGuessingGame.dll
+F:\Mentorship\NumberGuessingGame\bin\Debug\net8.0\NumberGuessingGame.pdb
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\NumberGuessingGame.AssemblyInfoInputs.cache
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\NumberGuessingGame.AssemblyInfo.cs
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\NumberGuessingGame.csproj.CoreCompileInputs.cache
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\NumberGuessingGame.dll
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\refint\NumberGuessingGame.dll
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\NumberGuessingGame.pdb
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\NumberGuessingGame.genruntimeconfig.cache
+F:\Mentorship\NumberGuessingGame\obj\Debug\net8.0\ref\NumberGuessingGame.dll
