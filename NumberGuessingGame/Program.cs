@@ -52,7 +52,7 @@ namespace GuessNumberGame
             }
         }
 
-        public static void Greating(Game game)
+        public static void PrintGreating(Game game)
         {
             Console.WriteLine("--- Guess Random Number Game ---\n");
 
