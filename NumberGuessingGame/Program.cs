@@ -8,7 +8,7 @@ namespace GuessNumberGame
         {
             Game game = new();
 
-            Greating(game);
+            PrintGreating(game);
 
             while (!game.IsGameOver())
             {
@@ -40,7 +40,7 @@ namespace GuessNumberGame
             if (playAgainInput == "yes")
             {
                 Console.Clear();
-                Greating(game);
+                PrintGreating(game);
             }
             else
             {
