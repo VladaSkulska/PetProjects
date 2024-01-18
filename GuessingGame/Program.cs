@@ -6,7 +6,7 @@
         {
             Game game = CreateGameWithStrategy();
 
-            Greating(game, game.GuessingCategory);
+            PrintGreating(game, game.GuessingCategory);
 
             while (!game.IsGameOver())
             {
@@ -69,7 +69,7 @@
                 }
 
                 Console.Clear();
-                Greating(game, game.GuessingCategory);
+                PrintGreating(game, game.GuessingCategory);
             }
             else
             {
@@ -81,7 +81,7 @@
             }
         }
 
-        public static void Greating(Game game, string guessingCategory)
+        public static void PrintGreating(Game game, string guessingCategory)
         {
             Console.Clear();
             Console.WriteLine($"--- Guess Random {guessingCategory} Game ---\n");
