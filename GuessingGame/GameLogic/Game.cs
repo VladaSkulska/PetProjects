@@ -1,4 +1,4 @@
-﻿namespace GuessingGame.GameLogic
+namespace GuessingGame.GameLogic
 {
     public class Game
     {
@@ -9,11 +9,14 @@
         private object _upperBound;
         private object _guessingValue;
         private readonly IGuessingStrategy _guessingStrategy;
+        private readonly IGuessingTypeHandler _guessingTypeHandler;
 
         public Game(IGuessingStrategy guessingStrategy, string guessingCategory)
         {
             _guessingStrategy = guessingStrategy;
             _guessingCategory = guessingCategory;
+
+            _guessingTypeHandler = CreateGuessingTypeHandler();
         }
 
         public string GuessingCategory => _guessingCategory;
@@ -54,54 +57,40 @@
             return _attempts >= MAX_ATTEMPTS;
         }
 
+        private IGuessingTypeHandler CreateGuessingTypeHandler()
+        {
+            return _guessingCategory switch
+            {
+                "Number" => new NumberTypeHandler(),
+                "Letter" => new CharTypeHandler(),
+                _ => throw new InvalidOperationException($"Invalid guessing category: {_guessingCategory}"),
+            };
+        }
+
         private (object, object) GenerateRange(string category)
         {
             if (category == "Number")
             {
-                return (GenerateRandomNumber(1, 11), GenerateRandomNumber(11, 21));
+                return (_guessingTypeHandler.GenerateRandomValue(1, 11), _guessingTypeHandler.GenerateRandomValue(11, 21));
+            }
+            else if (category == "Letter")
+            {
+                return (_guessingTypeHandler.GenerateRandomValue('A', 'K'), _guessingTypeHandler.GenerateRandomValue('L', 'Z'));
             }
             else
             {
-                return (GenerateRandomLetter('A', 'K'), GenerateRandomLetter('L', 'Z'));
+                throw new InvalidOperationException($"Invalid guessing category: {category}");
             }
         }
 
         private bool IsGuessOutOfRange(string guess, object lowerBound, object upperBound)
         {
-            if (lowerBound is int)
-            {
-                return !int.TryParse(guess, out int intGuess) || intGuess < (int)lowerBound || intGuess > (int)upperBound;
-            }
-            else if (lowerBound is char)
-            {
-                return !char.TryParse(guess, out char charGuess) || charGuess < (char)lowerBound || charGuess > (char)upperBound;
-            }
-
-            return true;
+            return _guessingTypeHandler.IsGuessOutOfRange(guess, lowerBound, upperBound);
         }
 
         private object GenerateRandomValue(object min, object max)
         {
-            if (min is int && max is int)
-            {
-                return GenerateRandomNumber((int)min, (int)max + 1);
-            }
-            else if (min is char && max is char)
-            {
-                return GenerateRandomLetter((char)min, (char)max);
-            }
-
-            return null;
-        }
-
-        private int GenerateRandomNumber(int min, int max)
-        {
-            return new Random().Next(min, max);
-        }
-
-        private char GenerateRandomLetter(char min, char max)
-        {
-            return (char)new Random().Next(min, max + 1);
+            return _guessingTypeHandler.GenerateRandomValue(min, max);
         }
     }
 }
