@@ -31,7 +31,7 @@ namespace GuessingGame.GameLogic
 
         public GuessResult MakeGuess(string userGuess)
         {
-            if (IsGuessOutOfRange(userGuess, _lowerBound, _upperBound))
+            if (_guessingTypeHandler.IsGuessOutOfRange(userGuess, _lowerBound, _upperBound))
             {
                 return new GuessResult(isWin: false, distanceToWin: $"- Please enter a valid guess.\n");
             }
