@@ -1,8 +1,10 @@
-﻿namespace GuessingGame.Interfaces
+namespace GuessingGame.Interfaces
 {
-    public interface IGuessingTypeHandler
+    public interface IGuessingTypeHandler<T>
     {
-        bool IsGuessOutOfRange(string guess, object lowerBound, object upperBound);
-        object GenerateRandomValue(object min, object max);
+        bool IsGuessOutOfRange(string guess, T lowerBound, T upperBound);
+        T GenerateRandomValue(T min, T max);
+        void GenerateRange();
+        (T LowerBound, T UpperBound) GetRange();
     }
 }
