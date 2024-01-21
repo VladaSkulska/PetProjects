@@ -1,15 +1,29 @@
 namespace GuessingGame.GameLogic.Handlers
 {
-    public class NumberTypeHandler : IGuessingTypeHandler
+    public class NumberTypeHandler : IGuessingTypeHandler<int>
     {
-        public bool IsGuessOutOfRange(string guess, object lowerBound, object upperBound)
+        private int _lowerBound;
+        private int _upperBound;
+
+        public bool IsGuessOutOfRange(string guess, int lowerBound, int upperBound)
         {
-            return !(int.TryParse(guess, out int intGuess) && intGuess >= (int)lowerBound && intGuess <= (int)upperBound);
+            return !(int.TryParse(guess, out int intGuess) && intGuess >= lowerBound && intGuess <= upperBound);
         }
 
-        public object GenerateRandomValue(object min, object max)
+        public void GenerateRange()
         {
-            return GenerateRandomNumber((int)min, (int)max + 1);
+            _lowerBound = GenerateRandomNumber(1, 11);
+            _upperBound = GenerateRandomNumber(11, 21);
+        }
+
+        public (int LowerBound, int UpperBound) GetRange()
+        {
+            return (_lowerBound, _upperBound);
+        }
+
+        public int GenerateRandomValue(int min, int max)
+        {
+            return GenerateRandomNumber(min, max);
         }
 
         private int GenerateRandomNumber(int min, int max)
