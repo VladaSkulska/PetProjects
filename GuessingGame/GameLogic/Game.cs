@@ -18,8 +18,7 @@ namespace GuessingGame.GameLogic
 
             _guessingTypeHandler = CreateGuessingTypeHandler();
         }
-        public static Game<T> CreateGame(IGuessingStrategy<T> guessingStrategy, string guessingCategory)
-
+        
         public string GuessingCategory => _guessingCategory;
         public int GetAttempts => _attempts;
 
