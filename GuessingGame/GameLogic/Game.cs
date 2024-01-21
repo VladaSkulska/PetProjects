@@ -1,32 +1,29 @@
 namespace GuessingGame.GameLogic
 {
-    public class Game
+    public class Game<T>
     {
         private const int MAX_ATTEMPTS = 5;
         private int _attempts;
-        private string _guessingCategory;
-        private object _lowerBound;
-        private object _upperBound;
-        private object _guessingValue;
-        private readonly IGuessingStrategy _guessingStrategy;
-        private readonly IGuessingTypeHandler _guessingTypeHandler;
+        private T _lowerBound;
+        private T _upperBound;
+        private T _guessingValue;
+        private readonly IGuessingStrategy<T> _guessingStrategy;
+        private readonly IGuessingTypeHandler<T> _guessingTypeHandler;
 
-        public Game(IGuessingStrategy guessingStrategy, string guessingCategory)
+        public Game(IGuessingStrategy<T> guessingStrategy)
         {
             _guessingStrategy = guessingStrategy;
-            _guessingCategory = guessingCategory;
 
-            _guessingTypeHandler = CreateGuessingTypeHandler();
+            _guessingTypeHandler = CreateGuessingTypeHandler<T>();
         }
-
-        public string GuessingCategory => _guessingCategory;
+        
         public int GetAttempts => _attempts;
 
-        public (object, object) ResetGame(string category)
+        public (T, T) ResetGame()
         {
             _attempts = 0;
 
-            (_lowerBound, _upperBound) = GenerateRange(category);
+            (_lowerBound, _upperBound) = _guessingTypeHandler.GenerateRange();
             _guessingValue = GenerateRandomValue(_lowerBound, _upperBound);
 
             return (_lowerBound, _upperBound);
@@ -45,11 +42,9 @@ namespace GuessingGame.GameLogic
             {
                 return new GuessResult(isWin: true, distanceToWin: $"- Congrats! You guessed the correct value - [ {_guessingValue} ]\n");
             }
-            else
-            {
-                _attempts++;
-                return result;
-            }
+
+            _attempts++;
+            return result;
         }
 
         public bool IsGameOver()
@@ -57,38 +52,22 @@ namespace GuessingGame.GameLogic
             return _attempts >= MAX_ATTEMPTS;
         }
 
-        private IGuessingTypeHandler CreateGuessingTypeHandler()
+        private IGuessingTypeHandler<T> CreateGuessingTypeHandler<T>()
         {
-            return _guessingCategory switch
-            {
-                "Number" => new NumberTypeHandler(),
-                "Letter" => new CharTypeHandler(),
-                _ => throw new InvalidOperationException($"Invalid guessing category: {_guessingCategory}"),
-            };
+            return (typeof(T) switch
+            { 
+                not null when typeof(T) == typeof(int) => new NumberTypeHandler() as IGuessingTypeHandler<T>,
+                not null when typeof(T) == typeof(char) => new CharTypeHandler() as IGuessingTypeHandler<T>,
+                _ => throw new InvalidOperationException($"Invalid guessing category: {typeof(T).Name}"),
+            })!;
         }
 
-        private (object, object) GenerateRange(string category)
-        {
-            if (category == "Number")
-            {
-                return (_guessingTypeHandler.GenerateRandomValue(1, 11), _guessingTypeHandler.GenerateRandomValue(11, 21));
-            }
-            else if (category == "Letter")
-            {
-                return (_guessingTypeHandler.GenerateRandomValue('A', 'K'), _guessingTypeHandler.GenerateRandomValue('L', 'Z'));
-            }
-            else
-            {
-                throw new InvalidOperationException($"Invalid guessing category: {category}");
-            }
-        }
-
-        private bool IsGuessOutOfRange(string guess, object lowerBound, object upperBound)
+        private bool IsGuessOutOfRange(string guess, T lowerBound, T upperBound)
         {
             return _guessingTypeHandler.IsGuessOutOfRange(guess, lowerBound, upperBound);
         }
 
-        private object GenerateRandomValue(object min, object max)
+        private T GenerateRandomValue(T min, T max)
         {
             return _guessingTypeHandler.GenerateRandomValue(min, max);
         }

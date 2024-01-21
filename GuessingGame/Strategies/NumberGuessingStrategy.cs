@@ -1,10 +1,10 @@
 ﻿namespace GuessingGame.Strategies
 {
-    public class NumberGuessingStrategy : IGuessingStrategy
+    public class NumberGuessingStrategy : IGuessingStrategy<int>
     {
-        public GuessResult CheckGuess(string guess, object secretValue, object lowerBound, object upperBound)
+        public GuessResult CheckGuess(string guess, int secretValue, int lowerBound, int upperBound)
         {
-            int difference = Math.Abs((int)secretValue - int.Parse(guess));
+            int difference = Math.Abs(secretValue - int.Parse(guess));
 
             if (difference == 0)
             {

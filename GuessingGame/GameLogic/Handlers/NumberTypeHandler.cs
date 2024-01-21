@@ -10,10 +10,12 @@ namespace GuessingGame.GameLogic.Handlers
             return !(int.TryParse(guess, out int intGuess) && intGuess >= lowerBound && intGuess <= upperBound);
         }
 
-        public void GenerateRange()
+        public (int, int) GenerateRange()
         {
             _lowerBound = GenerateRandomNumber(1, 11);
             _upperBound = GenerateRandomNumber(11, 21);
+
+            return (_lowerBound, _upperBound);
         }
 
         public (int LowerBound, int UpperBound) GetRange()

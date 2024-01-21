@@ -10,10 +10,12 @@ namespace GuessingGame.GameLogic.Handlers
             return !(char.TryParse(guess, out char charGuess) && charGuess >= lowerBound && charGuess <= upperBound);
         }
 
-        public void GenerateRange()
+        public (char, char) GenerateRange()
         {
             _lowerBound = GenerateRandomLetter('A', 'K');
             _upperBound = GenerateRandomLetter('L', 'Z');
+
+            return (_lowerBound, _upperBound);
         }
         public (char LowerBound, char UpperBound) GetRange()
         {

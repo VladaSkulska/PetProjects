@@ -1,27 +1,24 @@
 ﻿namespace GuessingGame.Strategies
 {
-    public class AlphabetGuessingStrategy : IGuessingStrategy
+    public class AlphabetGuessingStrategy : IGuessingStrategy<char>
     {
-        public GuessResult CheckGuess(string guess, object secretValue, object lowerBound, object upperBound)
+        public GuessResult CheckGuess(string guess, char secretValue, char lowerBound, char upperBound)
         {
-            string secretLetter = secretValue.ToString().ToUpper();
-            string guessedLetter = guess.ToUpper();
-
-            if (secretLetter == guessedLetter)
+            if (secretValue.ToString() == guess)
             {
                 return new GuessResult(isWin: true, distanceToWin: "");
             }
             else
             {
-                int distance = Math.Abs(secretLetter[0] - guessedLetter[0]);
+                int distance = Math.Abs(secretValue - char.Parse(guess));
 
                 if (distance == 1 || distance == 2)
                 {
-                    return new GuessResult(isWin: false, distanceToWin: $"- Very close! {GetAlphabeticalHint(secretLetter[0], guessedLetter[0])}\n");
+                    return new GuessResult(isWin: false, distanceToWin: $"- Very close! {GetAlphabeticalHint(secretValue, char.Parse(guess))}\n");
                 }
                 else
                 {
-                    string hint = GetAlphabeticalHint(secretLetter[0], guessedLetter[0]);
+                    string hint = GetAlphabeticalHint(secretValue, char.Parse(guess));
                     return new GuessResult(isWin: false, distanceToWin: $"- Incorrect letter! {hint}\n");
                 }
             }

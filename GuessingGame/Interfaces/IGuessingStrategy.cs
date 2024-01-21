@@ -1,7 +1,7 @@
 ﻿namespace GuessingGame.Interfaces
 {
-    public interface IGuessingStrategy
+    public interface IGuessingStrategy<in T>
     {
-        GuessResult CheckGuess(string guess, object secretValue, object lowerBound, object upperBound);
+        GuessResult CheckGuess(string guess, T secretValue, T lowerBound, T upperBound);
     }
 }
