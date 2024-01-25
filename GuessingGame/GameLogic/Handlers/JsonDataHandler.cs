@@ -37,13 +37,9 @@ namespace GuessingGame.GameLogic.Handlers
         {
             if (File.Exists(JsonFileName))
             {
-                if(new FileInfo(JsonFileName).Length == 0)
+                string json = File.ReadAllText(JsonFileName);
+                if (!string.IsNullOrEmpty(json))
                 {
-                    return new List<Player>();
-                }
-                else
-                {
-                    string json = File.ReadAllText(JsonFileName);
                     return JsonSerializer.Deserialize<List<Player>>(json) ?? new List<Player>();
                 }
             }

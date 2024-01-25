@@ -8,5 +8,15 @@
         public int GamesDefeated { get; set; }
 
         public List<GameHistoryEntry> GameHistory { get; set; } = new List<GameHistoryEntry>();
+
+        public void IncrementGamesWon()
+        {
+            ++GamesWon;
+        }
+
+        public void IncrementGamesDefeated()
+        {
+            ++GamesDefeated;
+        }
     }
 }

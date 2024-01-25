@@ -62,14 +62,14 @@ namespace GuessingGame.GameLogic
 
         private void HandleWin()
         {
-            ++_currentPlayer.GamesWon;
+            _currentPlayer.IncrementGamesWon();
 
             JsonDataHandler.UpdatePlayerGameHistory(_currentPlayer, true);
         }
 
         private void HandleLoss()
         {
-            ++_currentPlayer.GamesDefeated;
+            _currentPlayer.IncrementGamesDefeated();
 
             JsonDataHandler.UpdatePlayerGameHistory(_currentPlayer, false);
         }

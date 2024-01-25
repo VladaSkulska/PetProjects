@@ -2,7 +2,24 @@
 {
     public class PlayerManager
     {
-        private static int nextPlayerId = 0;
+        private static int nextPlayerId;
+
+        static PlayerManager()
+        {
+            nextPlayerId = CalculateNextPlayerId();
+        }
+
+        private static int CalculateNextPlayerId()
+        {
+            List<Player> players = JsonDataHandler.LoadPlayersFromFile();
+
+            if (players.Count > 0)
+            {
+                return players.Max(p => p.PlayerId) ;
+            }
+
+            return 0;
+        }
 
         public static Player LoadPlayer(string username)
         {
