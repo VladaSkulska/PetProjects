@@ -1,10 +1,5 @@
 ﻿namespace GuessingGame.GameLogic.Models
 {
-    public class GameResultEventArgs : EventArgs
-    {
-        public bool IsPlayerWin { get; set; }
-    }
-
     public class Player
     {
         public event EventHandler<GameResultEventArgs> GameWon;
