@@ -46,32 +46,18 @@ namespace GuessingGame.GameLogic
 
             if (result.IsWin)
             {
-                HandleWin();
+                _currentPlayer.HandleWin();
 
                 result.DistanceToWin = $"- Congrats! You guessed the correct value - [ {_guessingValue} ]\n";
             }
             else if (IsGameOver())
             {
-                HandleLoss();
+                _currentPlayer.HandleLoss();
 
                 result.DistanceToWin = $"- Game over! The correct value - [ {_guessingValue} ]\n";
             }
 
             return result;
-        }
-
-        private void HandleWin()
-        {
-            _currentPlayer.IncrementGamesWon();
-
-            JsonDataHandler.UpdatePlayerGameHistory(_currentPlayer, true);
-        }
-
-        private void HandleLoss()
-        {
-            _currentPlayer.IncrementGamesDefeated();
-
-            JsonDataHandler.UpdatePlayerGameHistory(_currentPlayer, false);
         }
 
         public bool IsGameOver()

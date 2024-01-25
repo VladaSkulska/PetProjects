@@ -23,7 +23,12 @@
 
         public static Player LoadPlayer(string username)
         {
-            return JsonDataHandler.LoadPlayerFromFile(username);
+            Player player = JsonDataHandler.LoadPlayerFromFile(username);
+
+            player.GameWon += PlayerWon;
+            player.GameDefeated += PlayerDefeated;
+
+            return player;
         }
         public static List<Player> LoadAllPlayers()
         {
@@ -46,6 +51,16 @@
             Console.WriteLine($"- New user {newPlayer.Username} created!");
 
             return newPlayer;
+        }
+
+        public static void PlayerWon(object sender, GameResultEventArgs e)
+        {
+            JsonDataHandler.UpdatePlayerGameHistory((Player)sender, true);
+        }
+
+        public static void PlayerDefeated(object sender, GameResultEventArgs e)
+        {
+            JsonDataHandler.UpdatePlayerGameHistory((Player)sender, false);
         }
 
         private static int GetNextPlayerId()
