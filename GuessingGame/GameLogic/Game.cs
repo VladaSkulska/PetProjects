@@ -9,15 +9,18 @@ namespace GuessingGame.GameLogic
         private T _guessingValue;
         private readonly IGuessingStrategy<T> _guessingStrategy;
         private readonly IGuessingTypeHandler<T> _guessingTypeHandler;
+        private Player _currentPlayer;
 
-        public Game(IGuessingStrategy<T> guessingStrategy)
+        public Game(IGuessingStrategy<T> guessingStrategy, Player currentPlayer)
         {
             _guessingStrategy = guessingStrategy;
+            _currentPlayer = currentPlayer;
 
             _guessingTypeHandler = CreateGuessingTypeHandler<T>();
         }
         
         public int GetAttempts => _attempts;
+        public Player CurrentPlayer => _currentPlayer;
 
         public (T, T) ResetGame()
         {
@@ -25,6 +28,8 @@ namespace GuessingGame.GameLogic
 
             (_lowerBound, _upperBound) = _guessingTypeHandler.GenerateRange();
             _guessingValue = GenerateRandomValue(_lowerBound, _upperBound);
+
+            _currentPlayer = PlayerManager.LoadPlayer(_currentPlayer.Username);
 
             return (_lowerBound, _upperBound);
         }
@@ -37,13 +42,21 @@ namespace GuessingGame.GameLogic
             }
 
             GuessResult result = _guessingStrategy.CheckGuess(userGuess, _guessingValue, _lowerBound, _upperBound);
+            _attempts++;
 
             if (result.IsWin)
             {
-                return new GuessResult(isWin: true, distanceToWin: $"- Congrats! You guessed the correct value - [ {_guessingValue} ]\n");
+                _currentPlayer.HandleWin();
+
+                result.DistanceToWin = $"- Congrats! You guessed the correct value - [ {_guessingValue} ]\n";
+            }
+            else if (IsGameOver())
+            {
+                _currentPlayer.HandleLoss();
+
+                result.DistanceToWin = $"- Game over! The correct value - [ {_guessingValue} ]\n";
             }
 
-            _attempts++;
             return result;
         }
 
