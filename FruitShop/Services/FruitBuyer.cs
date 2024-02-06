@@ -1,23 +1,28 @@
-﻿public class FruitBuyer<TFruit> where TFruit : Fruit
+﻿using FruitShop.Models;
+using FruitShop.Utilities;
+
+namespace FruitShop.Services
 {
-    private readonly FruitShop fruitShop;
-    private readonly string buyerName;
-
-    public FruitBuyer(FruitShop fruitShop, string buyerName)
+    public class FruitBuyer
     {
-        this.fruitShop = fruitShop;
-        this.buyerName = buyerName;
-    }
+        private readonly FruitStore fruitStore;
+        private readonly string buyerName;
 
-    public void BuyFruit()
-    {
-        if (fruitShop.TryBuyFruit(out TFruit boughtFruit))
+        public FruitBuyer(FruitStore fruitStore, string buyerName)
         {
-            Console.WriteLine($"{buyerName} bought {boughtFruit.Name}.");
+            this.fruitStore = fruitStore;
+            this.buyerName = buyerName;
         }
-        else
+
+        public async Task BuyFruitAsync(FruitType fruitType)
         {
-            Console.WriteLine($"{buyerName} couldn't buy a fruit of type {typeof(TFruit).Name}, as there are none available.");
+            await Task.Delay(1000);
+            var result = await fruitStore.TryBuyFruitAsync(fruitType);
+
+            if (result.Item1)
+                ConsoleLogger.LogSuccessfulPurchase(buyerName, result.Item2);
+            else
+                ConsoleLogger.LogUnsuccessfulPurchase(buyerName, fruitType);
         }
     }
 }

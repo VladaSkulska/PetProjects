@@ -1,15 +1,24 @@
-﻿public class FruitSupplier<TFruit> : IFruitSupplier<TFruit> where TFruit : Fruit
+﻿using FruitShop.Interfaces;
+using FruitShop.Models;
+using FruitShop.Utilities;
+
+namespace FruitShop.Services
 {
-    private readonly FruitShop fruitShop;
-
-    public FruitSupplier(FruitShop fruitShop)
+    public class FruitSupplier : IFruitSupplier
     {
-        this.fruitShop = fruitShop;
-    }
+        private readonly FruitStore fruitStore;
 
-    public void SupplyFruit(TFruit fruit)
-    {
-        Console.WriteLine($"Supplier supplied {typeof(TFruit).Name}.");
-        fruitShop.AddFruit(fruit);
+        public FruitSupplier(FruitStore fruitStore)
+        {
+            this.fruitStore = fruitStore;
+        }
+
+        public async Task SupplyFruitAsync(FruitType fruitType, string name)
+        {
+            await Task.Delay(1000);
+            await fruitStore.AddFruitAsync(fruitType, name);
+
+            ConsoleLogger.LogSupplierSupply(fruitType);
+        }
     }
 }

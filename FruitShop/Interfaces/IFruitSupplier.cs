@@ -1,4 +1,9 @@
-﻿public interface IFruitSupplier<TFruit> where TFruit : Fruit
+﻿using FruitShop.Models;
+
+namespace FruitShop.Interfaces
 {
-    void SupplyFruit(TFruit fruit);
+    public interface IFruitSupplier
+    {
+        Task SupplyFruitAsync(FruitType fruitType, string name);
+    }
 }

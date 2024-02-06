@@ -1,9 +1,12 @@
-﻿public class Fruit
+﻿namespace FruitShop.Models
 {
-    public string Name { get; }
-
-    public Fruit(string name)
+    public class Fruit
     {
-        Name = name;
+        public string Name { get; }
+
+        public Fruit(string name)
+        {
+            Name = name;
+        }
     }
 }
