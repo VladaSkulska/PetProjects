@@ -6,26 +6,25 @@ namespace FruitShop.Services
 {
     public class FruitStore
     {
-        private ConcurrentQueue<(FruitType, string)> fruits = new();
+        private readonly ConcurrentDictionary<FruitType, ConcurrentQueue<string>> fruitsByType = new();
 
         public async Task AddFruitAsync(FruitType fruitType, string name)
         {
             await Task.Run(() =>
             {
-                fruits.Enqueue((fruitType, name));
+                var fruitQueue = fruitsByType.GetOrAdd(fruitType, _ => new ConcurrentQueue<string>());
+                fruitQueue.Enqueue(name);
             });
 
             ConsoleLogger.LogFruitArrival(name);
         }
 
-        public async Task<(bool, string)> TryBuyFruitAsync(FruitType fruitType)
+        public async Task<(bool isSuccess, string fruit)> TryBuyFruitAsync(FruitType fruitType)
         {
-            (bool, string) result = await Task.Run(async() =>
+            (bool isSuccess, string fruit) result = await Task.Run(() =>
             {
-                (FruitType, string) boughtFruit;
-                if (fruits.TryDequeue(out boughtFruit) && boughtFruit.Item1 == fruitType)
+                if(fruitsByType.TryGetValue(fruitType, out var fruitQueue) && fruitQueue.TryDequeue(out string boughtFruitName))
                 {
-                    string boughtFruitName = boughtFruit.Item2;
                     return (true, boughtFruitName);
                 }
                 else

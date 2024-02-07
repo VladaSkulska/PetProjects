@@ -16,7 +16,7 @@ namespace FruitShop.Services
 
         public async Task BuyFruitAsync(FruitType fruitType)
         {
-            await Task.Delay(1000);
+            await Task.Delay(TimeSpan.FromSeconds(1));
             var result = await fruitStore.TryBuyFruitAsync(fruitType);
 
             if (result.Item1)

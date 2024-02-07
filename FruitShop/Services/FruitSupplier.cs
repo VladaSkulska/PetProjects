@@ -15,7 +15,7 @@ namespace FruitShop.Services
 
         public async Task SupplyFruitAsync(FruitType fruitType, string name)
         {
-            await Task.Delay(1000);
+            await Task.Delay(TimeSpan.FromSeconds(1));
             await fruitStore.AddFruitAsync(fruitType, name);
 
             ConsoleLogger.LogSupplierSupply(fruitType);

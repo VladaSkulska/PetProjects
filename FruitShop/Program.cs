@@ -16,13 +16,11 @@ namespace FruitShop
 
             var appleSupplier = new FruitSupplier(fruitStore);
             var orangeSupplier = new FruitSupplier(fruitStore);
-            var appleProducers = Enumerable.Range(1, 50).Select(i => Task.Run(() => appleSupplier.SupplyFruitAsync(FruitType.Apple, $"Apple {i}")));
-            var orangeProducers = Enumerable.Range(1, 50).Select(i => Task.Run(() => orangeSupplier.SupplyFruitAsync(FruitType.Orange, $"Orange {i}")));
+            var appleProducers = Enumerable.Range(1, 50).Select(i => appleSupplier.SupplyFruitAsync(FruitType.Apple, $"Apple {i}"));
+            var orangeProducers = Enumerable.Range(1, 50).Select(i => orangeSupplier.SupplyFruitAsync(FruitType.Orange, $"Orange {i}"));
 
-            var appleBuyers = Enumerable.Range(1, 50).Select(i => Task.Run(() => new FruitBuyer(fruitStore, $"Apple Buyer {i}").BuyFruitAsync(FruitType.Apple)));
-
-            var orangeBuyers = Enumerable.Range(1, 50).Select(i => Task.Run(() => new FruitBuyer(fruitStore, $"Orange Buyer {i}").BuyFruitAsync(FruitType.Orange)));
-
+            var appleBuyers = Enumerable.Range(1, 50).Select(i => new FruitBuyer(fruitStore, $"Apple Buyer {i}").BuyFruitAsync(FruitType.Apple));
+            var orangeBuyers = Enumerable.Range(1, 50).Select(i => new FruitBuyer(fruitStore, $"Orange Buyer {i}").BuyFruitAsync(FruitType.Orange));
 
             await Task.WhenAll(appleProducers.Concat(orangeProducers).Concat(appleBuyers).Concat(orangeBuyers));
         }
