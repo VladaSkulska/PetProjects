@@ -1,0 +1,6 @@
+@HDrezka_HostAddress = http://localhost:5130
+
+GET {{HDrezka_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
