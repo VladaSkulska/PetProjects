@@ -35,7 +35,7 @@ namespace HDrezka.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddMovie(MovieDetailDto movieDto)
+        public async Task<IActionResult> AddMovie(MovieDetailsDto movieDto)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace HDrezka.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMovie(int id, MovieDetailDto movieDto)
+        public async Task<IActionResult> UpdateMovie(int id, MovieDetailsDto movieDto)
         {
             try
             {

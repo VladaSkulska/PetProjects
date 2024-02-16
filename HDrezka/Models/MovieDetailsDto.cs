@@ -1,6 +1,6 @@
 ﻿namespace HDrezka.Models
 {
-    public class MovieDetailDto
+    public class MovieDetailsDto
     {
         public int Id { get; set; }
         public string Title { get; set; }

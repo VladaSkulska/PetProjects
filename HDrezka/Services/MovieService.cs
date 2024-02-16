@@ -24,7 +24,7 @@ namespace HDrezka.Services
             });
         }
 
-        public async Task<MovieDetailDto> GetMovieByIdAsync(int id)
+        public async Task<MovieDetailsDto> GetMovieByIdAsync(int id)
         {
             var movie = await _movieRepository.GetMovieByIdAsync(id);
             if (movie == null)
@@ -32,7 +32,7 @@ namespace HDrezka.Services
                 return null;
             }
 
-            return new MovieDetailDto
+            return new MovieDetailsDto
             {
                 Id = movie.Id,
                 Title = movie.Title,
@@ -45,7 +45,7 @@ namespace HDrezka.Services
             };
         }
 
-        public async Task<MovieDto> AddMovieAsync(MovieDetailDto movieDto)
+        public async Task<MovieDto> AddMovieAsync(MovieDetailsDto movieDto)
         {
             if (!Enum.TryParse(movieDto.Genre, true, out MovieGenre genre))
             {
@@ -79,7 +79,7 @@ namespace HDrezka.Services
             };
         }
 
-        public async Task UpdateMovieAsync(int id, MovieDetailDto movieDto)
+        public async Task UpdateMovieAsync(int id, MovieDetailsDto movieDto)
         {
             var existingMovie = await _movieRepository.GetMovieByIdAsync(id);
             if (existingMovie == null)
