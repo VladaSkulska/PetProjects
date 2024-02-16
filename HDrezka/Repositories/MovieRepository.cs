@@ -36,11 +36,16 @@ namespace HDrezka.Repositories
             }
         }
 
-        public async Task DeleteMovieAsync(int id)
+        public async Task<Movie> DeleteMovieAsync(int id)
         {
             var movies = new List<Movie>(await GetMoviesAsync());
-            movies.RemoveAll(movie =>  movie.Id == id);
-            await _jsonFileManager.SaveToJsonFileAsync(movies);
+            var movieToRemove = movies.FirstOrDefault(movie => movie.Id == id);
+            if (movieToRemove != null)
+            {
+                movies.Remove(movieToRemove);
+                await _jsonFileManager.SaveToJsonFileAsync(movies);
+            }
+            return movieToRemove;
         }
     }
 }
