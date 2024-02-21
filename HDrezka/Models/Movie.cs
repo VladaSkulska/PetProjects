@@ -1,7 +1,10 @@
-﻿namespace HDrezka.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HDrezka.Models
 {
     public class Movie
     {
+        [Key]
         public int Id { get; set; }
         public string Title { get; set; }
         public MovieGenre Genre { get; set; }

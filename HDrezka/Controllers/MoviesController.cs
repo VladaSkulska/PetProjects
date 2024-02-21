@@ -1,4 +1,4 @@
-﻿using HDrezka.Models;
+﻿using HDrezka.DTOs;
 using HDrezka.Services;
 using Microsoft.AspNetCore.Mvc;
 
