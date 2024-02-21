@@ -1,49 +1,47 @@
-﻿using HDrezka.Models;
-using HDrezka.Utilities;
+﻿using HDrezka.EF;
+using HDrezka.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HDrezka.Repositories
 {
     public class MovieRepository : IMovieRepository
     {
-        private readonly JsonFileManager _jsonFileManager = new();
+        private readonly AppDbContext _dbContext;
+
+        public MovieRepository(AppDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public async Task<IEnumerable<Movie>> GetMoviesAsync()
         {
-            return await _jsonFileManager.LoadFromJsonFileAsync<List<Movie>>();
+            return await _dbContext.Movies.ToListAsync();
         }
 
         public async Task<Movie> GetMovieByIdAsync(int id)
         {
-            var movies = await GetMoviesAsync();
-            return movies.FirstOrDefault(movie => movie.Id == id);
+            return await _dbContext.Movies.FindAsync(id);
         }
 
         public async Task AddMovieAsync(Movie movie)
         {
-            var movies = new List<Movie>(await GetMoviesAsync());
-            movies.Add(movie);
-            await _jsonFileManager.SaveToJsonFileAsync(movies);
+            _dbContext.Movies.Add(movie);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateMovieAsync(Movie movie)
         {
-            var movies = new List<Movie>(await GetMoviesAsync());
-            int index = movies.FindIndex(movie => movie.Id == movie.Id);
-            if (index != -1)
-            {
-                movies[index] = movie;
-                await _jsonFileManager.SaveToJsonFileAsync(movies);
-            }
+            _dbContext.Entry(movie).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Movie> DeleteMovieAsync(int id)
         {
-            var movies = new List<Movie>(await GetMoviesAsync());
-            var movieToRemove = movies.FirstOrDefault(movie => movie.Id == id);
+            var movieToRemove = await _dbContext.Movies.FindAsync(id);
             if (movieToRemove != null)
             {
-                movies.Remove(movieToRemove);
-                await _jsonFileManager.SaveToJsonFileAsync(movies);
+                _dbContext.Movies.Remove(movieToRemove);
+                await _dbContext.SaveChangesAsync();
             }
             return movieToRemove;
         }

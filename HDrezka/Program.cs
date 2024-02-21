@@ -1,11 +1,12 @@
 using HDrezka.EF;
 using HDrezka.Repositories;
 using HDrezka.Services;
+using HDrezka.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder();
 
-builder.Services.AddSingleton<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -17,8 +18,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<AppDbContext>();
+    DbInitializer.SeedMovies(dbContext);
+}
 
 if (app.Environment.IsDevelopment())
 {

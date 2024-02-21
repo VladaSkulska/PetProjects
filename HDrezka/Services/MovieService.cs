@@ -21,6 +21,7 @@ namespace HDrezka.Services
                 Id = m.Id,
                 Title = m.Title,
                 Genre = m.Genre.ToString(),
+                MovieType = m.MovieType.ToString(),
                 Description = m.Description
             });
         }
@@ -76,6 +77,7 @@ namespace HDrezka.Services
                 Id = movie.Id,
                 Title = movie.Title,
                 Genre = movie.Genre.ToString(),
+                MovieType = movie.MovieType.ToString(),
                 Description = movie.Description
             };
         }
@@ -144,6 +146,7 @@ namespace HDrezka.Services
                 Id = m.Id,
                 Title = m.Title,
                 Genre = m.Genre.ToString(),
+                MovieType = m.MovieType.ToString(),
                 Description = m.Description
             });
         }

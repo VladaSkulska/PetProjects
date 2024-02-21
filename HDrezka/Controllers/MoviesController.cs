@@ -81,9 +81,10 @@ namespace HDrezka.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> FilterMovies(string genre, string title, string type)
+        public async Task<IActionResult> FilterMovies(string? genre = null, string? title=null, string? type = null)
         {
             var movies = await _movieService.FilterMoviesAsync(genre, title, type);
+
             return Ok(movies);
         }
 
