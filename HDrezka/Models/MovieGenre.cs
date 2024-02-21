@@ -11,6 +11,8 @@
         Romance,
         Fantasy,
         ScienceFiction,
-        Musical
+        Musical,
+        Biography,
+        Crime
     }
 }

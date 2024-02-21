@@ -1,4 +1,5 @@
-﻿using HDrezka.Models;
+﻿using HDrezka.DTOs;
+using HDrezka.Models;
 using HDrezka.Repositories;
 
 namespace HDrezka.Services
@@ -20,6 +21,7 @@ namespace HDrezka.Services
                 Id = m.Id,
                 Title = m.Title,
                 Genre = m.Genre.ToString(),
+                MovieType = m.MovieType.ToString(),
                 Description = m.Description
             });
         }
@@ -69,12 +71,14 @@ namespace HDrezka.Services
             };
 
             await _movieRepository.AddMovieAsync(movie);
+            await _movieRepository.SaveAsync();
 
             return new MovieDto
             {
                 Id = movie.Id,
                 Title = movie.Title,
                 Genre = movie.Genre.ToString(),
+                MovieType = movie.MovieType.ToString(),
                 Description = movie.Description
             };
         }
@@ -106,6 +110,7 @@ namespace HDrezka.Services
             existingMovie.Director = movieDto.Director;
 
             await _movieRepository.UpdateMovieAsync(existingMovie);
+            await _movieRepository.SaveAsync();
         }
 
         public async Task DeleteMovieAsync(int id)
@@ -117,6 +122,7 @@ namespace HDrezka.Services
             }
 
             await _movieRepository.DeleteMovieAsync(id);
+            await _movieRepository.SaveAsync();
         }
 
         public async Task<IEnumerable<MovieDto>> FilterMoviesAsync(string genre, string title, string type)
@@ -143,6 +149,7 @@ namespace HDrezka.Services
                 Id = m.Id,
                 Title = m.Title,
                 Genre = m.Genre.ToString(),
+                MovieType = m.MovieType.ToString(),
                 Description = m.Description
             });
         }

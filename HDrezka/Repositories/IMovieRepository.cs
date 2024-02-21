@@ -9,5 +9,6 @@ namespace HDrezka.Repositories
         Task AddMovieAsync(Movie movie);
         Task UpdateMovieAsync(Movie movie);
         Task<Movie> DeleteMovieAsync(int id);
+        Task<int> SaveAsync();
     }
 }
