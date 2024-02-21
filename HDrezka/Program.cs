@@ -20,15 +20,15 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var dbContext = services.GetRequiredService<AppDbContext>();
-    DbInitializer.SeedMovies(dbContext);
-}
-
 if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var dbContext = services.GetRequiredService<AppDbContext>();
+        DbInitializer.SeedMovies(dbContext);
+    }
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {

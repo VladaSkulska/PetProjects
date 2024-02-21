@@ -26,13 +26,11 @@ namespace HDrezka.Repositories
         public async Task AddMovieAsync(Movie movie)
         {
             _dbContext.Movies.Add(movie);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateMovieAsync(Movie movie)
         {
             _dbContext.Entry(movie).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Movie> DeleteMovieAsync(int id)
@@ -41,9 +39,13 @@ namespace HDrezka.Repositories
             if (movieToRemove != null)
             {
                 _dbContext.Movies.Remove(movieToRemove);
-                await _dbContext.SaveChangesAsync();
             }
             return movieToRemove;
+        }
+
+        public async Task<int> SaveAsync()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
