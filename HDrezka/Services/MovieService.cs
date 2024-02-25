@@ -1,5 +1,5 @@
-﻿using HDrezka.DTOs;
-using HDrezka.Models;
+﻿using HDrezka.Models;
+using HDrezka.Models.DTOs;
 using HDrezka.Repositories;
 
 namespace HDrezka.Services

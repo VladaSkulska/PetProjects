@@ -1,4 +1,4 @@
-﻿namespace HDrezka.DTOs
+﻿namespace HDrezka.Models.DTOs
 {
     public class MovieDto
     {

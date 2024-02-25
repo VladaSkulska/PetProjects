@@ -1,7 +1,7 @@
 ﻿using HDrezka.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace HDrezka.EF
+namespace HDrezka.Data
 {
     public class AppDbContext : DbContext
     {

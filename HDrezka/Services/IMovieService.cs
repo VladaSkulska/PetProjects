@@ -1,4 +1,4 @@
-﻿using HDrezka.DTOs;
+﻿using HDrezka.Models.DTOs;
 
 namespace HDrezka.Services
 {
