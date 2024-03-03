@@ -24,5 +24,6 @@ namespace HDrezka.Data
         }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
     }
 }

@@ -7,7 +7,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder();
 
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
