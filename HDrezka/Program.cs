@@ -2,6 +2,7 @@ using HDrezka.Data;
 using HDrezka.Repositories;
 using HDrezka.Services;
 using HDrezka.Utilities;
+using HDrezka.Utilities.Validation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder();
@@ -11,6 +12,8 @@ builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
+
+builder.Services.AddTransient<MovieDetailsDtoValidator>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

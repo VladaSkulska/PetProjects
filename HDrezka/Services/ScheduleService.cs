@@ -59,7 +59,7 @@ namespace HDrezka.Services
             }
 
             var schedule = MapToEntity(scheduleDto);
-            await _scheduleRepository.UpdateScheduleAsync(schedule);
+            MapToEntity(schedule, existingSchedule);
             await _scheduleRepository.SaveAsync();
         }
 
@@ -154,6 +154,51 @@ namespace HDrezka.Services
             }
 
             return schedule;
+        }
+
+        private void MapToEntity(Schedule schedule, Schedule existingSchedule)
+        {
+            existingSchedule.Date = schedule.Date;
+
+            existingSchedule.MovieSchedules.Clear();
+
+            if (schedule.MovieSchedules != null)
+            {
+                foreach (var movieScheduleDto in schedule.MovieSchedules)
+                {
+                    var movieSchedule = new MovieSchedule
+                    {
+                        Id = movieScheduleDto.Id,
+                        MovieId = movieScheduleDto.MovieId,
+                        Order = movieScheduleDto.Order,
+                        ShowTime = movieScheduleDto.ShowTime
+                    };
+
+                    if (movieScheduleDto.Seats != null)
+                    {
+                        movieSchedule.Seats = movieScheduleDto.Seats.Select(seatDto => new Seat
+                        {
+                            Id = seatDto.Id,
+                            SeatNumber = seatDto.SeatNumber,
+                            IsAvailable = seatDto.IsAvailable
+                        }).ToList();
+                    }
+
+                    if (movieScheduleDto.Tickets != null)
+                    {
+                        movieSchedule.Tickets = movieScheduleDto.Tickets.Select(ticketDto => new Ticket
+                        {
+                            Id = ticketDto.Id,
+                            UserId = ticketDto.UserId,
+                            SeatNumber = ticketDto.SeatNumber,
+                            PurchaseTime = ticketDto.PurchaseTime,
+                            ExpirationTime = ticketDto.ExpirationTime
+                        }).ToList();
+                    }
+
+                    existingSchedule.MovieSchedules.Add(movieSchedule);
+                }
+            }
         }
     }
 }

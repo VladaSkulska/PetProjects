@@ -9,7 +9,6 @@ namespace HDrezka.Repositories
         Task<Schedule> GetScheduleForDateAsync(DateTime date);
         Task<Schedule> GetScheduleByIdAsync(int id);
         Task<Schedule> AddScheduleAsync(Schedule schedule);
-        Task<Schedule> UpdateScheduleAsync(Schedule schedule);
         Task<Schedule> DeleteScheduleAsync(int scheduleId);
         Task<int> SaveAsync();
     }

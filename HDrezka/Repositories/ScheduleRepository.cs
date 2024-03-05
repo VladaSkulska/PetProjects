@@ -45,12 +45,6 @@ namespace HDrezka.Repositories
             return schedule;
         }
 
-        public async Task<Schedule> UpdateScheduleAsync(Schedule schedule)
-        {
-            _dbContext.Entry(schedule).State = EntityState.Modified;
-            return schedule;
-        }
-
         public async Task<Schedule> DeleteScheduleAsync(int scheduleId)
         {
             var schedule = await _dbContext.Schedules.FindAsync(scheduleId);

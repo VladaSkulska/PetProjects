@@ -1,6 +1,8 @@
 ﻿using HDrezka.Models;
 using HDrezka.Models.DTOs;
 using HDrezka.Repositories;
+using HDrezka.Utilities.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace HDrezka.Services
 {
@@ -8,9 +10,12 @@ namespace HDrezka.Services
     {
         private readonly IMovieRepository _movieRepository;
 
-        public MovieService(IMovieRepository movieRepository)
+        private readonly MovieDetailsDtoValidator _movieValidator;
+
+        public MovieService(IMovieRepository movieRepository, MovieDetailsDtoValidator movieValidator)
         {
             _movieRepository = movieRepository;
+            _movieValidator = movieValidator;
         }
 
         public async Task<IEnumerable<MovieDto>> GetMoviesAsync()
@@ -32,7 +37,9 @@ namespace HDrezka.Services
 
         public async Task<MovieDto> AddMovieAsync(MovieDetailsDto movieDto)
         {
-            var (genre, movieType) = ValidateMovieDto(movieDto);
+            await ValidateMovieDetailsDtoAsync(movieDto);
+
+            var (genre, movieType) = ParseValues(movieDto);
 
             var movie = MapToEntity(genre, movieType, movieDto);
 
@@ -44,7 +51,9 @@ namespace HDrezka.Services
 
         public async Task UpdateMovieAsync(int id, MovieDetailsDto movieDto)
         {
-            var (genre, movieType) = ValidateMovieDto(movieDto);
+            await ValidateMovieDetailsDtoAsync(movieDto);
+
+            var (genre, movieType) = ParseValues(movieDto);
 
             var existingMovie = await _movieRepository.GetMovieByIdAsync(id);
             if (existingMovie == null)
@@ -54,7 +63,6 @@ namespace HDrezka.Services
 
             MapToEntity(genre, movieType, movieDto, existingMovie);
 
-            await _movieRepository.UpdateMovieAsync(existingMovie);
             await _movieRepository.SaveAsync();
         }
 
@@ -92,18 +100,21 @@ namespace HDrezka.Services
             return movies.Select(MapToDto);
         }
 
-        private (MovieGenre Genre, MovieType MovieType) ValidateMovieDto(MovieDetailsDto movieDto)
+        private async Task ValidateMovieDetailsDtoAsync(MovieDetailsDto movieDto)
         {
-            if (!Enum.TryParse(movieDto.Genre, true, out MovieGenre genre))
+            var validationResult = await new MovieDetailsDtoValidator().ValidateAsync(movieDto);
+            if (!validationResult.IsValid)
             {
-                throw new ArgumentException("Invalid genre");
+                var errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                throw new ValidationException($"Validation failed: {errors}");
             }
+        }
 
-            if (!Enum.TryParse(movieDto.MovieType, true, out MovieType movieType))
-            {
-                throw new ArgumentException("Invalid movie type");
-            }
-
+        private (MovieGenre Genre, MovieType MovieType) ParseValues(MovieDetailsDto movieDto)
+        {
+            var genre = Enum.Parse<MovieGenre>(movieDto.Genre, true);
+            var movieType = Enum.Parse<MovieType>(movieDto.MovieType, true);
+            
             return (genre, movieType);
         }
 

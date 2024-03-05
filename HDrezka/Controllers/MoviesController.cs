@@ -1,6 +1,7 @@
 ﻿using HDrezka.Models.DTOs;
 using HDrezka.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace HDrezka.Controllers
 {
@@ -42,7 +43,7 @@ namespace HDrezka.Controllers
                 var addedMovie = await _movieService.AddMovieAsync(movieDto);
                 return CreatedAtAction(nameof(GetMovie), new { id = addedMovie.Id }, addedMovie);
             }
-            catch (ArgumentException ex)
+            catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -60,7 +61,7 @@ namespace HDrezka.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (ArgumentException ex)
+            catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
             }

@@ -28,11 +28,6 @@ namespace HDrezka.Repositories
             _dbContext.Movies.Add(movie);
         }
 
-        public async Task UpdateMovieAsync(Movie movie)
-        {
-            _dbContext.Entry(movie).State = EntityState.Modified;
-        }
-
         public async Task<Movie> DeleteMovieAsync(int id)
         {
             var movieToRemove = await _dbContext.Movies.FindAsync(id);

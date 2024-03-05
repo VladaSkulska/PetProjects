@@ -8,11 +8,11 @@ namespace HDrezka.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("MovieScheduleId")]
+        [ForeignKey(nameof(MovieSchedule))]
         public int MovieScheduleId { get; set; }
         public MovieSchedule MovieSchedule { get; set; }
 
-        [ForeignKey("User")]
+        [ForeignKey(nameof(User))]
         public string UserId { get; set; }
 
         [Required]
