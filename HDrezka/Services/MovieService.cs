@@ -1,4 +1,5 @@
-﻿using HDrezka.Models;
+﻿using AutoMapper;
+using HDrezka.Models;
 using HDrezka.Models.DTOs;
 using HDrezka.Repositories;
 using HDrezka.Utilities.Validation;
@@ -8,20 +9,22 @@ namespace HDrezka.Services
 {
     public class MovieService : IMovieService
     {
+        private readonly IMapper _movieMapper;
         private readonly IMovieRepository _movieRepository;
 
         private readonly MovieDetailsDtoValidator _movieValidator;
 
-        public MovieService(IMovieRepository movieRepository, MovieDetailsDtoValidator movieValidator)
+        public MovieService(IMovieRepository movieRepository, IMapper movieMapper, MovieDetailsDtoValidator movieValidator)
         {
             _movieRepository = movieRepository;
+            _movieMapper = movieMapper;
             _movieValidator = movieValidator;
         }
 
         public async Task<IEnumerable<MovieDto>> GetMoviesAsync()
         {
             var movies = await _movieRepository.GetMoviesAsync();
-            return movies.Select(MapToDto);
+            return _movieMapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
         public async Task<MovieDetailsDto> GetMovieByIdAsync(int id)
@@ -32,7 +35,7 @@ namespace HDrezka.Services
                 return null;
             }
 
-            return MapToDetailsDto(movie);
+            return _movieMapper.Map<MovieDetailsDto>(movie);
         }
 
         public async Task<MovieDto> AddMovieAsync(MovieDetailsDto movieDto)
@@ -41,12 +44,14 @@ namespace HDrezka.Services
 
             var (genre, movieType) = ParseValues(movieDto);
 
-            var movie = MapToEntity(genre, movieType, movieDto);
+            var movie = _movieMapper.Map<Movie>(movieDto);
+            movie.Genre = genre;
+            movie.MovieType = movieType;
 
             await _movieRepository.AddMovieAsync(movie);
             await _movieRepository.SaveAsync();
 
-            return MapToDto(movie);
+            return _movieMapper.Map<MovieDto>(movie);
         }
 
         public async Task UpdateMovieAsync(int id, MovieDetailsDto movieDto)
@@ -61,7 +66,9 @@ namespace HDrezka.Services
                 throw new KeyNotFoundException($"Movie with ID {id} not found");
             }
 
-            MapToEntity(genre, movieType, movieDto, existingMovie);
+            _movieMapper.Map(movieDto, existingMovie);
+            existingMovie.Genre = genre;
+            existingMovie.MovieType = movieType;
 
             await _movieRepository.SaveAsync();
         }
@@ -97,7 +104,7 @@ namespace HDrezka.Services
                 movies = movies.Where(m => m.MovieType.ToString().Equals(type, StringComparison.OrdinalIgnoreCase));
             }
 
-            return movies.Select(MapToDto);
+            return _movieMapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
         private async Task ValidateMovieDetailsDtoAsync(MovieDetailsDto movieDto)
@@ -116,58 +123,6 @@ namespace HDrezka.Services
             var movieType = Enum.Parse<MovieType>(movieDto.MovieType, true);
             
             return (genre, movieType);
-        }
-
-        private MovieDto MapToDto(Movie movie)
-        {
-            return new MovieDto
-            {
-                Id = movie.Id,
-                Title = movie.Title,
-                Genre = movie.Genre.ToString(),
-                MovieType = movie.MovieType.ToString(),
-                Description = movie.Description
-            };
-        }
-
-        private MovieDetailsDto MapToDetailsDto(Movie movie)
-        {
-            return new MovieDetailsDto
-            {
-                Id = movie.Id,
-                Title = movie.Title,
-                Genre = movie.Genre.ToString(),
-                MovieType = movie.MovieType.ToString(),
-                Description = movie.Description,
-                DurationMinutes = movie.DurationMinutes,
-                Director = movie.Director,
-                ReleaseDate = movie.ReleaseDate
-            };
-        }
-
-        private Movie MapToEntity(MovieGenre genre, MovieType movieType, MovieDetailsDto movieDto)
-        {
-            return new Movie
-            {
-                Title = movieDto.Title,
-                Genre = genre,
-                MovieType = movieType,
-                Description = movieDto.Description,
-                DurationMinutes = movieDto.DurationMinutes,
-                Director = movieDto.Director,
-                ReleaseDate = movieDto.ReleaseDate
-            };
-        }
-
-        private void MapToEntity(MovieGenre genre, MovieType movieType, MovieDetailsDto movieDto, Movie movie)
-        {
-            movie.Title = movieDto.Title;
-            movie.Genre = genre;
-            movie.MovieType = movieType;
-            movie.Description = movieDto.Description;
-            movie.DurationMinutes = movieDto.DurationMinutes;
-            movie.Director = movieDto.Director;
-            movie.ReleaseDate = movieDto.ReleaseDate;
         }
     }
 }

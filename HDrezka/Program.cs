@@ -2,6 +2,7 @@ using HDrezka.Data;
 using HDrezka.Repositories;
 using HDrezka.Services;
 using HDrezka.Utilities;
+using HDrezka.Utilities.Mapper;
 using HDrezka.Utilities.Validation;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 builder.Services.AddTransient<MovieDetailsDtoValidator>();
+builder.Services.AddAutoMapper(typeof(MovieMappingProfile), typeof(ScheduleMappingProfile));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
