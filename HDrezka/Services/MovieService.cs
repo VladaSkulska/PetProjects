@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using HDrezka.Models;
 using HDrezka.Models.DTOs;
-using HDrezka.Repositories;
+using HDrezka.Repositories.Interfaces;
+using HDrezka.Services.Interfaces;
 using HDrezka.Utilities.Validation;
 using System.ComponentModel.DataAnnotations;
 
@@ -109,7 +110,7 @@ namespace HDrezka.Services
 
         private async Task ValidateMovieDetailsDtoAsync(MovieDetailsDto movieDto)
         {
-            var validationResult = await new MovieDetailsDtoValidator().ValidateAsync(movieDto);
+            var validationResult = await _movieValidator.ValidateAsync(movieDto);
             if (!validationResult.IsValid)
             {
                 var errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));

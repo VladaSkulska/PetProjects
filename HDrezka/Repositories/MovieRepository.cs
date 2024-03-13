@@ -1,5 +1,6 @@
 ﻿using HDrezka.Data;
 using HDrezka.Models;
+using HDrezka.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace HDrezka.Repositories

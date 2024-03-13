@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using HDrezka.Models;
 using HDrezka.Models.DTOs;
-using HDrezka.Repositories;
+using HDrezka.Repositories.Interfaces;
+using HDrezka.Services.Interfaces;
 
 namespace HDrezka.Services
 {

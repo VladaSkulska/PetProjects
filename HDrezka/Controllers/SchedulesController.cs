@@ -1,5 +1,5 @@
 ﻿using HDrezka.Models.DTOs;
-using HDrezka.Services;
+using HDrezka.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HDrezka.Controllers

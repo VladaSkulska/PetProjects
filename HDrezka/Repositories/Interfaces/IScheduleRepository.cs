@@ -1,6 +1,6 @@
 ﻿using HDrezka.Models;
 
-namespace HDrezka.Repositories
+namespace HDrezka.Repositories.Interfaces
 {
     public interface IScheduleRepository
     {

@@ -1,6 +1,6 @@
 ﻿using HDrezka.Models.DTOs;
 
-namespace HDrezka.Services
+namespace HDrezka.Services.Interfaces
 {
     public interface IScheduleService
     {

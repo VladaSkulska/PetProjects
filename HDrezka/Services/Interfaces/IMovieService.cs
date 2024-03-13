@@ -1,9 +1,9 @@
 ﻿using HDrezka.Models.DTOs;
 
-namespace HDrezka.Services
+namespace HDrezka.Services.Interfaces
 {
     public interface IMovieService
-    { 
+    {
         Task<IEnumerable<MovieDto>> GetMoviesAsync();
         Task<MovieDetailsDto> GetMovieByIdAsync(int id);
         Task<MovieDto> AddMovieAsync(MovieDetailsDto movieDto);

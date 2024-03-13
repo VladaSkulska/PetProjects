@@ -1,5 +1,5 @@
 ﻿using HDrezka.Models.DTOs;
-using HDrezka.Services;
+using HDrezka.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -27,12 +27,10 @@ namespace HDrezka.Controllers
         public async Task<IActionResult> GetMovie(int id)
         {
             var movie = await _movieService.GetMovieByIdAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(movie);
+            return movie == null 
+                ? NotFound() 
+                : Ok(movie);
         }
 
         [HttpPost]
@@ -93,12 +91,10 @@ namespace HDrezka.Controllers
         public async Task<IActionResult> GetMovieDescription(int id)
         {
             var movie = await _movieService.GetMovieByIdAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(movie.Description);
+            return movie == null 
+                ? NotFound() 
+                : Ok(movie.Description);
         }
     }
 }

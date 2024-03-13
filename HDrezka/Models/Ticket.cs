@@ -10,10 +10,7 @@ namespace HDrezka.Models
 
         [ForeignKey(nameof(MovieSchedule))]
         public int MovieScheduleId { get; set; }
-        public MovieSchedule MovieSchedule { get; set; }
-
-        [ForeignKey(nameof(User))]
-        public string UserId { get; set; }
+        public MovieSchedule MovieScheduleInst { get; set; }
 
         [Required]
         public int SeatNumber { get; set; }
