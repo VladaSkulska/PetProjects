@@ -15,6 +15,8 @@ namespace HDrezka.Models
         {
             Seats = new List<Seat>();
             Tickets = new List<Ticket>();
+
+            InitializeSeatsAndTickets();
         }
 
         public void InitializeSeatsAndTickets()
