@@ -17,7 +17,9 @@ namespace HDrezka.Models
         public Schedule Schedule { get; set; }
         public int Order { get; set; } 
         public DateTime ShowTime { get; set; }
-        public ICollection<Seat> Seats { get; set; }
-        public ICollection<Ticket> Tickets { get; set; }
+
+        [ForeignKey(nameof(CinemaRoom))]
+        public int CinemaRoomId { get; set; }
+        public CinemaRoom CinemaRoom { get; set; }
     }
 }

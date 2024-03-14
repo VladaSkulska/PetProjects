@@ -8,8 +8,10 @@ namespace HDrezka.Utilities.Mapper
     {
         public TicketMappingProfile() 
         { 
-            CreateMap<TicketDto, Ticket>();
-            CreateMap<Ticket, TicketDto>();
+            CreateMap<TicketDto, Ticket>()
+                .ForMember(dest => dest.SeatId, opt => opt.MapFrom(src => src.SeatNumber));
+            CreateMap<Ticket, TicketDto>()
+                .ForMember(dest => dest.SeatNumber, opt => opt.MapFrom(src => src.SeatId));
         }
     }
 }

@@ -13,14 +13,19 @@ namespace HDrezka.Repositories
             _dbContext = context;
         }
 
-        public async Task<Seat> GetSeatByNumberAsync(int seatNumber)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task MarkSeatAsUnavailableAsync(Seat seat)
         {
-            throw new NotImplementedException();
+            if (seat == null)
+            {
+                throw new ArgumentNullException(nameof(seat), "Seat cannot be null.");
+            }
+
+            seat.IsAvailable = false;
+        }
+
+        public async Task<int> SaveAsync()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

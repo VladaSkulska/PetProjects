@@ -1,6 +1,6 @@
 ﻿using HDrezka.Models;
 
-namespace HDrezka.Repositories.Interfaces
+namespace HDrezka.Repositories
 {
     public interface IMovieScheduleRepository
     {

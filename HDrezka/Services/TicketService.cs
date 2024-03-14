@@ -25,31 +25,38 @@ namespace HDrezka.Services
 
         public async Task<TicketDto> BuyTicketAsync(int movieScheduleId, int seatNumber)
         {
-            var seat = await _seatRepository.GetSeatByNumberAsync(seatNumber);
+            var movieSchedule = await _movieScheduleRepository.GetMovieScheduleByIdAsync(movieScheduleId);
+            if (movieSchedule == null)
+            {
+                throw new KeyNotFoundException($"Movie schedule with ID {movieScheduleId} not found.");
+            }
+
+            var cinemaRoom = movieSchedule.CinemaRoom;
+            if (cinemaRoom == null)
+            {
+                throw new KeyNotFoundException("Cinema room not found.");
+            }
+
+            var seat = cinemaRoom.Seats.FirstOrDefault(s => s.SeatNumber == seatNumber);
             if (seat == null || !seat.IsAvailable)
-                throw new InvalidOperationException("Seat is not available");
+            {
+                throw new InvalidOperationException("Seat is not available.");
+            }
 
             await _seatRepository.MarkSeatAsUnavailableAsync(seat);
 
             var purchaseTime = DateTime.UtcNow;
-
-            var movieSchedule = await _movieScheduleRepository.GetMovieScheduleByIdAsync(movieScheduleId);
-            if (movieSchedule == null)
-                throw new ArgumentException("Movie schedule not found");
-
             var expirationTime = movieSchedule.ShowTime.Add(TimeSpan.FromMinutes(movieSchedule.Movie.DurationMinutes));
 
             var ticket = new Ticket
             {
                 MovieScheduleId = movieScheduleId,
-                MovieScheduleInst = movieSchedule,
-                SeatId = seat.Id,
-                Seat = seat,
+                SeatId = seatNumber,
                 PurchaseTime = purchaseTime,
                 ExpirationTime = expirationTime
             };
 
-            await _ticketRepository.AddTicketAsync(ticket);
+            await _ticketRepository.RemoveTicketAsync(ticket.Id);
             await _ticketRepository.SaveAsync();
 
             var ticketDto = _mapper.Map<TicketDto>(ticket);

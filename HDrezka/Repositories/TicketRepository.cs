@@ -1,5 +1,4 @@
 ﻿using HDrezka.Data;
-using HDrezka.Models;
 using HDrezka.Repositories.Interfaces;
 
 namespace HDrezka.Repositories
@@ -11,20 +10,17 @@ namespace HDrezka.Repositories
         {
             _dbContext = dbContext;
         }
-
-        public async Task AddTicketAsync(Ticket ticket)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task RemoveTicketAsync(int ticketId)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Ticket> GetTicketByIdAsync(int ticketId)
-        {
-            throw new NotImplementedException();
+            var ticket = await _dbContext.Tickets.FindAsync(ticketId);
+            if (ticket != null)
+            {
+                _dbContext.Tickets.Remove(ticket);
+            }
+            else
+            {
+                throw new InvalidOperationException("Ticket not found.");
+            }
         }
 
         public async Task<int> SaveAsync()
