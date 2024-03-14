@@ -1,24 +1,22 @@
 ﻿using HDrezka.Models.DTOs.Identity;
-using HDrezka.Models;
 using HDrezka.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using HDrezka.Utilities.Exceptions;
 
 namespace HDrezka.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthService : IAuthService
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
         }
 
@@ -26,7 +24,7 @@ namespace HDrezka.Services
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                throw new InvalidOperationException("User already exists!");
+                throw new UserRegistrationException("User already exists!");
 
             var user = new IdentityUser
             {
@@ -37,34 +35,7 @@ namespace HDrezka.Services
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                throw new InvalidOperationException("Failed to create user!");
-        }
-
-        public async Task RegisterAdminAsync(RegisterModel model)
-        {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                throw new InvalidOperationException("User already exists!");
-
-            var user = new IdentityUser
-            {
-                Email = model.Email,
-                UserName = model.Username,
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                throw new InvalidOperationException("Failed to create user!");
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-
-            await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-            await _userManager.AddToRoleAsync(user, UserRoles.User);
+                throw new UserRegistrationException("Failed to create user!");
         }
 
         public async Task<JwtSecurityToken> LoginAsync(string username, string password)

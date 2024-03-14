@@ -1,5 +1,6 @@
 ﻿using HDrezka.Models.DTOs;
 using HDrezka.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HDrezka.Controllers
@@ -46,6 +47,7 @@ namespace HDrezka.Controllers
             return Ok(schedules);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ScheduleDto>> AddScheduleAsync(ScheduleDto scheduleDto)
         {
@@ -60,6 +62,7 @@ namespace HDrezka.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateScheduleAsync(int id, ScheduleDto scheduleDto)
         {
@@ -74,6 +77,7 @@ namespace HDrezka.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteScheduleAsync(int id)
         {

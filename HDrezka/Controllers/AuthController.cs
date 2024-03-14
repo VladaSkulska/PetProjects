@@ -3,15 +3,16 @@ using HDrezka.Models.DTOs.Identity;
 using Microsoft.AspNetCore.Mvc;
 using HDrezka.Utilities;
 using System.IdentityModel.Tokens.Jwt;
+using HDrezka.Utilities.Exceptions;
 
 namespace HDrezka.Controllers
 {
     [ApiController]
     [Route("api/auth")]
-    public class AuthenticationController : Controller
+    public class AuthController : Controller
     {
-        private readonly IAuthenticationService _authenticationService;
-        public AuthenticationController(IAuthenticationService authenticationService) 
+        private readonly IAuthService _authenticationService;
+        public AuthController(IAuthService authenticationService) 
         {
             _authenticationService = authenticationService;
         }
@@ -24,22 +25,7 @@ namespace HDrezka.Controllers
                 await _authenticationService.RegisterUserAsync(model);
                 return Ok(new Response { Status = "Success", Message = "User created successfully!" });
             }
-            catch (InvalidOperationException ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new Response { Status = "Error", Message = ex.Message });
-            }
-        }
-
-        [HttpPost("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
-        {
-            try
-            {
-                await _authenticationService.RegisterAdminAsync(model);
-                return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-            }
-            catch (InvalidOperationException ex)
+            catch (UserRegistrationException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new Response { Status = "Error", Message = ex.Message });

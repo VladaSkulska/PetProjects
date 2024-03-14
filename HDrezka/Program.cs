@@ -8,10 +8,8 @@ using HDrezka.Utilities;
 using HDrezka.Utilities.Mapper;
 using HDrezka.Utilities.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Exchange.WebServices.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -19,9 +17,15 @@ var builder = WebApplication.CreateBuilder();
 
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+builder.Services.AddScoped<IMovieScheduleRepository, MovieScheduleRepository>();
+builder.Services.AddScoped<ISeatRepository, SeatRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<ITicketService,  TicketService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAdminService, AdminAuthService>();
 
 builder.Services.AddTransient<MovieDetailsDtoValidator>();
 builder.Services.AddAutoMapper(typeof(MovieMappingProfile), typeof(ScheduleMappingProfile));
