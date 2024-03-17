@@ -4,6 +4,8 @@ using HDrezka.Models.DTOs;
 using HDrezka.Repositories;
 using HDrezka.Repositories.Interfaces;
 using HDrezka.Services.Interfaces;
+using HDrezka.Utilities.Exceptions;
+using System.Net;
 
 namespace HDrezka.Services
 {
@@ -28,19 +30,19 @@ namespace HDrezka.Services
             var movieSchedule = await _movieScheduleRepository.GetMovieScheduleByIdAsync(movieScheduleId);
             if (movieSchedule == null)
             {
-                throw new KeyNotFoundException($"Movie schedule with ID {movieScheduleId} not found.");
+                throw new TicketOperationException($"Movie schedule with ID {movieScheduleId} not found.", HttpStatusCode.NotFound);
             }
 
             var cinemaRoom = movieSchedule.CinemaRoom;
             if (cinemaRoom == null)
             {
-                throw new KeyNotFoundException("Cinema room not found.");
+                throw new TicketOperationException("Cinema room not found.", HttpStatusCode.NotFound);
             }
 
             var seat = cinemaRoom.Seats.FirstOrDefault(s => s.SeatNumber == seatNumber);
             if (seat == null || !seat.IsAvailable)
             {
-                throw new InvalidOperationException("Seat is not available.");
+                throw new TicketOperationException("Seat is not available.", HttpStatusCode.BadRequest);
             }
 
             await _seatRepository.MarkSeatAsUnavailableAsync(seat);

@@ -17,14 +17,14 @@ namespace HDrezka.Utilities.Validation
                 .Must(BeAValidMovieType).WithMessage("Invalid movie type");
         }
 
-        private bool BeAValidGenre(string genre)
+        private bool BeAValidGenre(MovieGenre genre)
         {
-            return Enum.TryParse(genre, true, out MovieGenre _);
+            return Enum.IsDefined(typeof(MovieGenre), genre);
         }
 
-        private bool BeAValidMovieType(string movieType)
+        private bool BeAValidMovieType(MovieType movieType)
         {
-            return Enum.TryParse(movieType, true, out MovieType _);
+            return Enum.IsDefined(typeof(MovieType), movieType);
         }
     }
 }

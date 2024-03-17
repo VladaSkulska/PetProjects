@@ -47,7 +47,7 @@ namespace HDrezka.Controllers
             return Ok(schedules);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ScheduleDto>> AddScheduleAsync(ScheduleDto scheduleDto)
         {
@@ -62,7 +62,7 @@ namespace HDrezka.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateScheduleAsync(int id, ScheduleDto scheduleDto)
         {
@@ -77,7 +77,7 @@ namespace HDrezka.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteScheduleAsync(int id)
         {

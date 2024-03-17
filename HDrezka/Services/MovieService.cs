@@ -14,7 +14,6 @@ namespace HDrezka.Services
         private readonly IMovieRepository _movieRepository;
 
         private readonly MovieDetailsDtoValidator _movieValidator;
-
         public MovieService(IMovieRepository movieRepository, IMapper movieMapper, MovieDetailsDtoValidator movieValidator)
         {
             _movieRepository = movieRepository;
@@ -43,11 +42,7 @@ namespace HDrezka.Services
         {
             await ValidateMovieDetailsDtoAsync(movieDto);
 
-            var (genre, movieType) = ParseValues(movieDto);
-
             var movie = _movieMapper.Map<Movie>(movieDto);
-            movie.Genre = genre;
-            movie.MovieType = movieType;
 
             await _movieRepository.AddMovieAsync(movie);
             await _movieRepository.SaveAsync();
@@ -58,9 +53,6 @@ namespace HDrezka.Services
         public async Task UpdateMovieAsync(int id, MovieDetailsDto movieDto)
         {
             await ValidateMovieDetailsDtoAsync(movieDto);
-
-            var (genre, movieType) = ParseValues(movieDto);
-
             var existingMovie = await _movieRepository.GetMovieByIdAsync(id);
             if (existingMovie == null)
             {
@@ -68,8 +60,6 @@ namespace HDrezka.Services
             }
 
             _movieMapper.Map(movieDto, existingMovie);
-            existingMovie.Genre = genre;
-            existingMovie.MovieType = movieType;
 
             await _movieRepository.SaveAsync();
         }
@@ -116,14 +106,6 @@ namespace HDrezka.Services
                 var errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
                 throw new ValidationException($"Validation failed: {errors}");
             }
-        }
-
-        private (MovieGenre Genre, MovieType MovieType) ParseValues(MovieDetailsDto movieDto)
-        {
-            var genre = Enum.Parse<MovieGenre>(movieDto.Genre, true);
-            var movieType = Enum.Parse<MovieType>(movieDto.MovieType, true);
-            
-            return (genre, movieType);
         }
     }
 }

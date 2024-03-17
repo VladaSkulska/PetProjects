@@ -1,9 +1,11 @@
 ﻿using HDrezka.Models;
 using HDrezka.Services.Interfaces;
 using HDrezka.Utilities;
+using HDrezka.Utilities.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace HDrezka.Controllers
 {
@@ -29,13 +31,18 @@ namespace HDrezka.Controllers
                 var ticket = await _ticketService.BuyTicketAsync(model.MovieScheduleId, model.SeatNumber);
                 return Ok(ticket);
             }
-            catch (KeyNotFoundException ex)
+            catch (TicketOperationException ex)
             {
-                return NotFound(new Response { Status = "Error", Message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new Response { Status = "Error", Message = ex.Message });
+                if (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NotFound(new Response { Status = "Error", Message = ex.Message });
+                }
+                else if (ex.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    return BadRequest(new Response { Status = "Error", Message = ex.Message });
+                }
+
+                return StatusCode(500, new Response { Status = "Error", Message = "An unexpected error occurred." });
             }
         }
     }
