@@ -1,6 +1,7 @@
 ﻿using HDrezka.Models.DTOs.Identity;
 using HDrezka.Services.Interfaces;
 using HDrezka.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HDrezka.Controllers
@@ -15,6 +16,7 @@ namespace HDrezka.Controllers
             _adminService = adminService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
