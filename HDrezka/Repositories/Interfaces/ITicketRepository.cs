@@ -1,6 +1,4 @@
-﻿using HDrezka.Models;
-
-namespace HDrezka.Repositories.Interfaces
+﻿namespace HDrezka.Repositories.Interfaces
 {
     public interface ITicketRepository
     {
