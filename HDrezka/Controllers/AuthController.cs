@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using HDrezka.Utilities;
 using System.IdentityModel.Tokens.Jwt;
 using HDrezka.Utilities.Exceptions;
+using HDrezka.Models;
 
 namespace HDrezka.Controllers
 {
@@ -41,11 +42,13 @@ namespace HDrezka.Controllers
                 return Unauthorized();
             }
 
-            return Ok(new 
+            var response = new LoginResponseModel
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
-            });
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
+            };
+
+            return Ok(response);
         }
     }
 }

@@ -3,6 +3,7 @@ using HDrezka.Models;
 using HDrezka.Models.DTOs;
 using HDrezka.Repositories.Interfaces;
 using HDrezka.Services.Interfaces;
+using HDrezka.Utilities.Exceptions;
 
 namespace HDrezka.Services
 {
@@ -59,7 +60,7 @@ namespace HDrezka.Services
             var existingSchedule = await _scheduleRepository.GetScheduleByIdAsync(id);
             if (existingSchedule == null)
             {
-                throw new KeyNotFoundException($"Schedule with ID {id} not found");
+                throw new ScheduleNotFoundException($"Schedule with ID {id} not found");
             }
 
             _scheduleMapper.Map(scheduleDto, existingSchedule);
@@ -71,7 +72,7 @@ namespace HDrezka.Services
             var existingSchedule = await _scheduleRepository.GetScheduleByIdAsync(id);
             if (existingSchedule == null)
             {
-                throw new KeyNotFoundException($"Schedule with ID {id} not found");
+                throw new ScheduleNotFoundException($"Schedule with ID {id} not found");
             }
 
             await _scheduleRepository.DeleteScheduleAsync(id);
