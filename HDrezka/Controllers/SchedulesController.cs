@@ -1,5 +1,6 @@
 ﻿using HDrezka.Models.DTOs;
 using HDrezka.Services.Interfaces;
+using HDrezka.Utilities.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,7 +72,7 @@ namespace HDrezka.Controllers
                 await _scheduleService.UpdateScheduleAsync(id, scheduleDto);
                 return NoContent();
             }
-            catch (KeyNotFoundException ex)
+            catch (ScheduleNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -86,7 +87,7 @@ namespace HDrezka.Controllers
                 await _scheduleService.DeleteScheduleAsync(id);
                 return NoContent();
             }
-            catch (KeyNotFoundException ex)
+            catch (ScheduleNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
