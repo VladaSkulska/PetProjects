@@ -1,29 +1,30 @@
-﻿using HDrezka.DTOs;
+﻿using AutoMapper;
 using HDrezka.Models;
-using HDrezka.Repositories;
+using HDrezka.Models.DTOs;
+using HDrezka.Repositories.Interfaces;
+using HDrezka.Services.Interfaces;
+using HDrezka.Utilities.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace HDrezka.Services
 {
     public class MovieService : IMovieService
     {
+        private readonly IMapper _movieMapper;
         private readonly IMovieRepository _movieRepository;
 
-        public MovieService(IMovieRepository movieRepository)
+        private readonly MovieDetailsDtoValidator _movieValidator;
+        public MovieService(IMovieRepository movieRepository, IMapper movieMapper, MovieDetailsDtoValidator movieValidator)
         {
             _movieRepository = movieRepository;
+            _movieMapper = movieMapper;
+            _movieValidator = movieValidator;
         }
 
         public async Task<IEnumerable<MovieDto>> GetMoviesAsync()
         {
             var movies = await _movieRepository.GetMoviesAsync();
-            return movies.Select(m => new MovieDto
-            {
-                Id = m.Id,
-                Title = m.Title,
-                Genre = m.Genre.ToString(),
-                MovieType = m.MovieType.ToString(),
-                Description = m.Description
-            });
+            return _movieMapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
         public async Task<MovieDetailsDto> GetMovieByIdAsync(int id)
@@ -34,82 +35,32 @@ namespace HDrezka.Services
                 return null;
             }
 
-            return new MovieDetailsDto
-            {
-                Id = movie.Id,
-                Title = movie.Title,
-                Genre = movie.Genre.ToString(),
-                MovieType = movie.MovieType.ToString(),
-                Description = movie.Description,
-                DurationMinutes = movie.DurationMinutes,
-                Director = movie.Director,
-                ReleaseDate = movie.ReleaseDate
-            };
+            return _movieMapper.Map<MovieDetailsDto>(movie);
         }
 
         public async Task<MovieDto> AddMovieAsync(MovieDetailsDto movieDto)
         {
-            if (!Enum.TryParse(movieDto.Genre, true, out MovieGenre genre))
-            {
-                throw new ArgumentException("Invalid genre");
-            }
+            await ValidateMovieDetailsDtoAsync(movieDto);
 
-            if (!Enum.TryParse(movieDto.MovieType, true, out MovieType movieType))
-            {
-                throw new ArgumentException("Invalid movie type");
-            }
-
-            var movie = new Movie
-            {
-                Title = movieDto.Title,
-                Genre = genre,
-                MovieType = movieType,
-                Description = movieDto.Description,
-                DurationMinutes = movieDto.DurationMinutes,
-                Director = movieDto.Director,
-                ReleaseDate = movieDto.ReleaseDate
-            };
+            var movie = _movieMapper.Map<Movie>(movieDto);
 
             await _movieRepository.AddMovieAsync(movie);
             await _movieRepository.SaveAsync();
 
-            return new MovieDto
-            {
-                Id = movie.Id,
-                Title = movie.Title,
-                Genre = movie.Genre.ToString(),
-                MovieType = movie.MovieType.ToString(),
-                Description = movie.Description
-            };
+            return _movieMapper.Map<MovieDto>(movie);
         }
 
         public async Task UpdateMovieAsync(int id, MovieDetailsDto movieDto)
         {
+            await ValidateMovieDetailsDtoAsync(movieDto);
             var existingMovie = await _movieRepository.GetMovieByIdAsync(id);
             if (existingMovie == null)
             {
                 throw new KeyNotFoundException($"Movie with ID {id} not found");
             }
 
-            if (!Enum.TryParse(movieDto.MovieType, true, out MovieType movieType))
-            {
-                throw new ArgumentException("Invalid movie type");
-            }
+            _movieMapper.Map(movieDto, existingMovie);
 
-            if (!Enum.TryParse(movieDto.Genre, true, out MovieGenre genre))
-            {
-                throw new ArgumentException("Invalid genre");
-            }
-
-            existingMovie.Title = movieDto.Title;
-            existingMovie.ReleaseDate = movieDto.ReleaseDate;
-            existingMovie.Description = movieDto.Description;
-            existingMovie.MovieType = movieType;
-            existingMovie.Genre = genre;
-            existingMovie.DurationMinutes = movieDto.DurationMinutes;
-            existingMovie.Director = movieDto.Director;
-
-            await _movieRepository.UpdateMovieAsync(existingMovie);
             await _movieRepository.SaveAsync();
         }
 
@@ -144,14 +95,17 @@ namespace HDrezka.Services
                 movies = movies.Where(m => m.MovieType.ToString().Equals(type, StringComparison.OrdinalIgnoreCase));
             }
 
-            return movies.Select(m => new MovieDto
+            return _movieMapper.Map<IEnumerable<MovieDto>>(movies);
+        }
+
+        private async Task ValidateMovieDetailsDtoAsync(MovieDetailsDto movieDto)
+        {
+            var validationResult = await _movieValidator.ValidateAsync(movieDto);
+            if (!validationResult.IsValid)
             {
-                Id = m.Id,
-                Title = m.Title,
-                Genre = m.Genre.ToString(),
-                MovieType = m.MovieType.ToString(),
-                Description = m.Description
-            });
+                var errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                throw new ValidationException($"Validation failed: {errors}");
+            }
         }
     }
 }

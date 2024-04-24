@@ -1,6 +1,7 @@
-﻿using HDrezka.DTOs;
-using HDrezka.Services;
+﻿using HDrezka.Models.DTOs;
+using HDrezka.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace HDrezka.Controllers
 {
@@ -26,12 +27,10 @@ namespace HDrezka.Controllers
         public async Task<IActionResult> GetMovie(int id)
         {
             var movie = await _movieService.GetMovieByIdAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(movie);
+            return movie == null 
+                ? NotFound() 
+                : Ok(movie);
         }
 
         [HttpPost]
@@ -42,7 +41,7 @@ namespace HDrezka.Controllers
                 var addedMovie = await _movieService.AddMovieAsync(movieDto);
                 return CreatedAtAction(nameof(GetMovie), new { id = addedMovie.Id }, addedMovie);
             }
-            catch (ArgumentException ex)
+            catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -60,7 +59,7 @@ namespace HDrezka.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (ArgumentException ex)
+            catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -92,12 +91,10 @@ namespace HDrezka.Controllers
         public async Task<IActionResult> GetMovieDescription(int id)
         {
             var movie = await _movieService.GetMovieByIdAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(movie.Description);
+            return movie == null 
+                ? NotFound() 
+                : Ok(movie.Description);
         }
     }
 }

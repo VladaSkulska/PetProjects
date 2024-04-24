@@ -1,5 +1,6 @@
-﻿using HDrezka.EF;
+﻿using HDrezka.Data;
 using HDrezka.Models;
+using HDrezka.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace HDrezka.Repositories
@@ -26,11 +27,6 @@ namespace HDrezka.Repositories
         public async Task AddMovieAsync(Movie movie)
         {
             _dbContext.Movies.Add(movie);
-        }
-
-        public async Task UpdateMovieAsync(Movie movie)
-        {
-            _dbContext.Entry(movie).State = EntityState.Modified;
         }
 
         public async Task<Movie> DeleteMovieAsync(int id)

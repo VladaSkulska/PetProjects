@@ -13,6 +13,5 @@ namespace HDrezka.Models
         public int DurationMinutes { get; set; }
         public string Director { get; set; }
         public DateTime ReleaseDate { get; set; }
-
     }
 }

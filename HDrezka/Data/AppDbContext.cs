@@ -1,7 +1,7 @@
 ﻿using HDrezka.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace HDrezka.EF
+namespace HDrezka.Data
 {
     public class AppDbContext : DbContext
     {
@@ -24,5 +24,7 @@ namespace HDrezka.EF
         }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
     }
 }
